@@ -1,0 +1,12 @@
+<h1>Vulnerable Application</h1>
+
+{% if name %}
+    <p>Hello {{ name|safe}}</p>
+    <p><a href="">New Name?</a></p>
+{% else %}
+    <p>What is your name?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Max" />
+    </form>
+{% endif %}
