@@ -1,5 +1,5 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'eu.gcr.io/cs-devsecops-example/vulnerable-app', '.']
+  args: ['build', '-t', 'eu.gcr.io/cs-devsecops-example/vulnerable-app', './application']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
