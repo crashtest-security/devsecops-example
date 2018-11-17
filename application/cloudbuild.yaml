@@ -3,6 +3,6 @@ steps:
   args: ['build', '-t', 'eu.gcr.io/cs-devsecops-example/vulnerable-app', './application']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
-- name: 'eu.gcr.io/cs-devsecops-example/vulnerable-app'
+- name: 'gcr.io/cloud-builders/gcloud'
   args: ['app', 'deploy']
 timeout: '1600s'
