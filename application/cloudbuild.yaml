@@ -7,9 +7,10 @@ steps:
   args: ['app', 'deploy', '--image-url', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
   dir: 'application'
 - name: gcr.io/cloud-builders/curl
-  args: ['-X', 'POST', '"https://api.crashtest.cloud/webhook/$$WEBHOOK"']
+  entrypoint: bash
+  args: ['-c', 'curl -X POST https://api.crashtest.cloud/webhook/$$WEBHOOK']
   secretEnv: ['WEBHOOK']
-  
+
 timeout: '1600s'
 
 secrets:
