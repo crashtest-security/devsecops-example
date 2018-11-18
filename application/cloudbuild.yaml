@@ -5,5 +5,5 @@ steps:
   args: ['push', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['app', 'deploy', '--image-url', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
-  dir: '/application'
+  dir: 'application'
 timeout: '1600s'
