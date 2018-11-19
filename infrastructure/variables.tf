@@ -12,7 +12,6 @@
 variable "google_project_id" {
   type        = "string"
   description = "Google Cloud Platform project identifier."
-  default     = "cs-devsecops-example"
 }
 
 variable "google_project_number" {
