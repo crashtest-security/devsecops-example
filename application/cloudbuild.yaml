@@ -3,16 +3,26 @@ steps:
 #   dir: 'application'
 #   entrypoint: bash
 #   args: ['-c', 'pip install safety; safety check --file requirements.txt --full-report']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'eu.gcr.io/cs-devsecops-example/vulnerable-app', './application']
+- name: gcr.io/cloud-builders/curl
+  entrypoint: bash
+  args: ['-c', 'echo "lorem" > crashtest-c5fbfb00.html']
+  id: 'create-verification-file'
+  dir: 'application'
   waitFor: ['-']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
+  args: ['build', '-t', 'eu.gcr.io/cs-devsecops-example/vulnerable-app:latest-dev', './application']
+  id: 'build-container'
+  waitFor: ['create-verification-file']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/cs-devsecops-example/vulnerable-app:latest-dev']
+  id: 'push-container'
+  waitFor: ['build-container']
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['app', 'deploy', '--image-url', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
+  args: ['app', 'deploy', '--image-url', 'eu.gcr.io/cs-devsecops-example/vulnerable-app:latest-dev']
   id: 'app-engine-deploy'
   dir: 'application'
   timeout: '600s'
+  waitFor: ['push-container']
 - name: gcr.io/cloud-builders/curl
   entrypoint: bash
   args: ['-c', 'curl -X POST https://api.crashtest.cloud/webhook/$$WEBHOOK']
