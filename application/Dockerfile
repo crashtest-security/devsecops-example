@@ -1,7 +1,11 @@
-FROM python:3.6-alpine3.6
+FROM ubuntu:17.10
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip
 
 COPY requirements.txt /requirements.txt
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 COPY . /
 
