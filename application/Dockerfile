@@ -1,7 +1,8 @@
-FROM alpine:3.4
+FROM ubuntu:17.10
 
-RUN apk add --update --no-cache \
-    python3
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip
 
 COPY requirements.txt /requirements.txt
 RUN pip3 install -r requirements.txt
