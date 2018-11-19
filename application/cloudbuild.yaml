@@ -1,4 +1,7 @@
 steps:
+- name: python:3.7-alpine
+  entrypoint: bash
+  args: ['-c', 'pip install safety; safety check --file requirements.txt --full-report']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'eu.gcr.io/cs-devsecops-example/vulnerable-app', './application']
 - name: 'gcr.io/cloud-builders/docker'
