@@ -23,10 +23,10 @@ only uses Google Cloud  Build, which has a generous free contingent, and Google
 App Engine.
 
 ```bash
-gcloud projects create cs-devsecops-example --organization <YOUR_ORG_ID>
-gcloud config set project cs-devsecops-example
+gcloud projects create <YOUR_PROJECT_ID> --organization <YOUR_ORG_ID>
+gcloud config set project <YOUR_PROJECT_ID>
 gcloud services enable cloudbilling.googleapis.com
-gcloud beta billing projects link cs-devsecops-example --billing-account <YOUR_BILLING_ACCOUNT_ID>
+gcloud beta billing projects link <YOUR_PROJECT_ID> --billing-account <YOUR_BILLING_ACCOUNT_ID>
 ```
 
 Run the following to create an App Engine application for your project.
@@ -40,8 +40,17 @@ Terraform to provision and configure our project.
 
 ```bash
 gcloud iam service-accounts create terraform --display-name "Terraform Admin Account"
-gcloud projects add-iam-policy-binding cs-devsecops-example --member serviceAccount:terraform@cs-devsecops-example.iam.gserviceaccount.com --role roles/viewer 
-gcloud iam service-accounts keys create ./terraform-account.json --iam-account terraform@cs-devsecops-example.iam.gserviceaccount.com
+gcloud projects add-iam-policy-binding <YOUR_PROJECT_ID> --member serviceAccount:terraform@<YOUR_PROJECT_ID>.iam.gserviceaccount.com --role roles/viewer 
+gcloud iam service-accounts keys create ./terraform-account.json --iam-account terraform@<YOUR_PROJECT_ID>.iam.gserviceaccount.com
+```
+
+Before running your Terraform, you will need to provide values for the project
+identifier and number variable. The easiest solution is to copy the example 
+value file and replace the placeholder values. You can find the project number
+on the Dashboard of the your Google Cloud console.
+
+```bash
+cp examples.tfvars terraform.tfvars
 ```
 
 Finally apply the Terraform plan by running the following command.
@@ -92,3 +101,8 @@ configuration.
 **Note:** To keep it simple this build trigger is executed for commits on all
 branches. In your productive configuration you probably want to create multiple
 build configurations for (e.g. master, develop and feature branches).
+
+
+### Crashtest Security Suite
+
+
