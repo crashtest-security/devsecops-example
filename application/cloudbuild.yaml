@@ -5,7 +5,8 @@ steps:
 #   args: ['-c', 'pip install safety; safety check --file requirements.txt --full-report']
 - name: gcr.io/cloud-builders/curl
   entrypoint: bash
-  args: ['-c', 'echo "lorem" > crashtest-c5fbfb00.html']
+  args: ['-c', 'echo "$$VERIFICATION_TOKEN" > crashtest-c5fbfb00.html']
+  secretEnv: ['VERIFICATION_TOKEN']
   id: 'create-verification-file'
   dir: 'application'
   waitFor: ['-']
@@ -35,3 +36,4 @@ secrets:
 - kmsKeyName: projects/cs-devsecops-example/locations/europe-west3/keyRings/cloud-build-secrets-ring/cryptoKeys/cloud-build-secrets-key
   secretEnv:
     WEBHOOK: CiQAt4CjTO2umx8VnzRMe7yfI54jM5zEXIX0sNUjnTSpetNEPZESTQBvm/J+cPwOakrRnK2BIBkSe4AzPTEGwrDbbNTZCpjxEv6hCGrjMz/rZt53fmXfX3IOQ/h3pvIl2S2e7akzkXi+Owc+olrTv51Ohgqg
+    VERIFICATION_TOKEN: CiQAt4CjTGCEbp18Fv63ppHnPqqiAIoyDOGGGFfQ2iEDKlPTEzkSTQBvm/J+xFGGVmb0c4sk25jow5PxEfACgfstE67TeoPUYJXTFyaIM70xafbegCuLXKT6knxj84Midjjh5/AQ7zNCtOgksMkXMX3Tynj6
