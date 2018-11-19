@@ -1,21 +1,25 @@
 steps:
-# - name: python:3.7-stretch
-#   dir: 'application'
-#   entrypoint: bash
-#   args: ['-c', 'pip install safety; safety check --file requirements.txt --full-report']
+- name: python:3.7-stretch
+  dir: 'application'
+  entrypoint: bash
+  args: ['-c', 'pip install safety; safety check --file requirements.txt --full-report']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'eu.gcr.io/cs-devsecops-example/vulnerable-app', './application']
+  waitFor: ['-']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['app', 'deploy', '--image-url', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
+  id: 'app-engine-deploy'
   dir: 'application'
+  timeout: '1600s'
 - name: gcr.io/cloud-builders/curl
   entrypoint: bash
   args: ['-c', 'curl -X POST https://api.crashtest.cloud/webhook/$$WEBHOOK']
   secretEnv: ['WEBHOOK']
+  waitFor: ['app-engine-deploy']
 
-timeout: '1600s'
+
 
 secrets:
 - kmsKeyName: projects/cs-devsecops-example/locations/europe-west3/keyRings/cloud-build-secrets-ring/cryptoKeys/cloud-build-secrets-key
