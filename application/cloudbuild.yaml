@@ -1,0 +1,39 @@
+steps:
+# - name: python:3.7-stretch
+#   dir: 'application'
+#   entrypoint: bash
+#   args: ['-c', 'pip install safety; safety check --file requirements.txt --full-report']
+- name: gcr.io/cloud-builders/curl
+  entrypoint: bash
+  args: ['-c', 'echo "$$VERIFICATION_TOKEN" > crashtest-c5fbfb00.html']
+  secretEnv: ['VERIFICATION_TOKEN']
+  id: 'create-verification-file'
+  dir: 'application'
+  waitFor: ['-']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'eu.gcr.io/cs-devsecops-example/vulnerable-app:latest-dev', './application']
+  id: 'build-container'
+  waitFor: ['create-verification-file']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/cs-devsecops-example/vulnerable-app:latest-dev']
+  id: 'push-container'
+  waitFor: ['build-container']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['app', 'deploy', '--image-url', 'eu.gcr.io/cs-devsecops-example/vulnerable-app:latest-dev']
+  id: 'app-engine-deploy'
+  dir: 'application'
+  timeout: '600s'
+  waitFor: ['push-container']
+- name: gcr.io/cloud-builders/curl
+  entrypoint: bash
+  args: ['-c', 'sleep 1m; curl -X POST https://api.crashtest.cloud/webhook/$$WEBHOOK']
+  secretEnv: ['WEBHOOK']
+  waitFor: ['app-engine-deploy']
+
+
+
+secrets:
+- kmsKeyName: projects/cs-devsecops-example/locations/europe-west3/keyRings/cloud-build-secrets-ring/cryptoKeys/cloud-build-secrets-key
+  secretEnv:
+    WEBHOOK: CiQAt4CjTO2umx8VnzRMe7yfI54jM5zEXIX0sNUjnTSpetNEPZESTQBvm/J+cPwOakrRnK2BIBkSe4AzPTEGwrDbbNTZCpjxEv6hCGrjMz/rZt53fmXfX3IOQ/h3pvIl2S2e7akzkXi+Owc+olrTv51Ohgqg
+    VERIFICATION_TOKEN: CiQAt4CjTGCEbp18Fv63ppHnPqqiAIoyDOGGGFfQ2iEDKlPTEzkSTQBvm/J+xFGGVmb0c4sk25jow5PxEfACgfstE67TeoPUYJXTFyaIM70xafbegCuLXKT6knxj84Midjjh5/AQ7zNCtOgksMkXMX3Tynj6

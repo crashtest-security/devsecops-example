@@ -25,7 +25,7 @@ SECRET_KEY = "ym2am&=9m^9voz9@+v5s9f!_)1ayply%v=tdz9_^(be%kzqufh"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['cs-devsecops-example.appspot.com']
 
 
 # Application definition
