@@ -30,7 +30,7 @@ steps:
   secretEnv: ['WEBHOOK']
   waitFor: ['app-engine-deploy']
 
-
+timeout: '900s'
 
 secrets:
 - kmsKeyName: projects/cs-devsecops-example/locations/europe-west3/keyRings/cloud-build-secrets-ring/cryptoKeys/cloud-build-secrets-key
