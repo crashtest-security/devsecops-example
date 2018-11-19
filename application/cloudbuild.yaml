@@ -12,7 +12,7 @@ steps:
   args: ['app', 'deploy', '--image-url', 'eu.gcr.io/cs-devsecops-example/vulnerable-app']
   id: 'app-engine-deploy'
   dir: 'application'
-  timeout: '1600s'
+  timeout: '600s'
 - name: gcr.io/cloud-builders/curl
   entrypoint: bash
   args: ['-c', 'curl -X POST https://api.crashtest.cloud/webhook/$$WEBHOOK']
