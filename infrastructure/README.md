@@ -105,4 +105,36 @@ build configurations for (e.g. master, develop and feature branches).
 
 ### Crashtest Security Suite
 
+Create a new project in the [Crashtest Security Suite](https://www.crashtest.cloud)
+using the testing mode. During the verification take note of the filename and
+adjust the following line in the `./application/cloudbuild.yaml`.
 
+```
+args: ['-c', 'echo "$$VERIFICATION_TOKEN" > <YOUR_VERIFICATION_FILENAME>']
+```
+
+Afterwards copy your verification hash and store it as a build secret in Google
+KMS.
+
+```bash
+export WEBHOOK=<YOUR_WEBHOOK>
+echo -n $WEBHOOK | gcloud kms encrypt \
+  --plaintext-file=- \  # - reads from stdin
+  --ciphertext-file=- \  # - writes to stdout
+  --location=europe-west3 \
+  --keyring=cloud-build-secrets-ring \
+  --key=cloud-build-secrets-key | base64
+```
+
+Finally navigate to the project preferences and create a webhook. Copy the
+generated hash and store it as a build secret in Google KMS as well.
+
+```bash
+export VERIFICATION_TOKEN=<YOUR_VERIFICATION_TOKEN>
+echo -n $VERIFICATION_TOKEN | gcloud kms encrypt \
+  --plaintext-file=- \  # - reads from stdin
+  --ciphertext-file=- \  # - writes to stdout
+  --location=europe-west3 \
+  --keyring=cloud-build-secrets-ring \
+  --key=cloud-build-secrets-key | base64
+```
