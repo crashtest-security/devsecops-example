@@ -1,7 +1,10 @@
-FROM python:3.6-alpine3.6
+FROM alpine:3.4
+
+RUN apk add --update --no-cache \
+    python3
 
 COPY requirements.txt /requirements.txt
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 COPY . /
 
