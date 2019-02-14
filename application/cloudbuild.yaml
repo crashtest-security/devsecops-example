@@ -26,7 +26,7 @@ steps:
   waitFor: ['push-container']
 - name: gcr.io/cloud-builders/curl
   entrypoint: bash
-  args: ['-c', 'sleep 1m; curl -X POST https://api.crashtest.cloud/webhook/$$WEBHOOK']
+  args: ['-c', 'sleep 1m; curl -X POST -d "" https://api.crashtest.cloud/webhook/$$WEBHOOK']
   secretEnv: ['WEBHOOK']
   waitFor: ['app-engine-deploy']
 
