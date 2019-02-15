@@ -78,9 +78,15 @@ resource "google_project_services" "project" {
 
 # Grant the Google Cloud Build service account access to Google App Engine for
 # the deployment of the application
-resource "google_project_iam_member" "cloud_build" {
+resource "google_project_iam_member" "cloud_build_app_admin" {
   project = "${var.google_project_id}"
   role    = "roles/appengine.appAdmin"
+  member  = "serviceAccount:${var.google_project_number}@cloudbuild.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "cloud_build_api_viewer" {
+  project = "${var.google_project_id}"
+  role    = "roles/serviceusage.serviceUsageViewer"
   member  = "serviceAccount:${var.google_project_number}@cloudbuild.gserviceaccount.com"
 }
 
